@@ -213,12 +213,14 @@ Meteor.methods({
 
 	/* ------------------------------------------------------------------------------------------------------- */
 	
-	S3delete: function(file_id, callback){
-		var path = file.user + "/" + file.file_name;
+	S3delete: function(file_id, path, callback){
 		S3files.remove({_id: file_id});
 		knox.deleteFile(path, function(error, data) {
-			if (!error)
-				Meteor.call(callback);
+			if (!error){
+				if(typeof callback == 'string'){
+		        	Meteor.call(callback);
+		      	}
+		    }
 			else throw new Meteor.Error(500, 'Internal Server Error');
 		});
 	},
